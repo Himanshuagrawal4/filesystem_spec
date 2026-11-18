@@ -1360,7 +1360,14 @@ class AbstractFileSystem(metaclass=_Cached):
         return sorted(out)
 
     def mv(self, path1, path2, recursive=False, maxdepth=None, **kwargs):
-        """Move file(s) from one location to another"""
+        """Move file(s) from one location to another.
+
+        The default implementation copies to the destination before removing
+        the source. Backends can override this with a native move or rename.
+        Whether an existing destination is replaced, and whether the move is
+        atomic, depends on the backend. Do not rely on a uniform overwrite
+        behavior when moving between different kinds of filesystems.
+        """
         if path1 == path2:
             logger.debug("%s mv: The paths are the same, so no files were moved.", self)
         else:
